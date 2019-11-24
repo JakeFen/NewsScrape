@@ -1,4 +1,4 @@
-if (window.location.href === "http://localhost:3000/") {
+if (window.location.href === "http://localhost:3000/" || window.location.href === "https://nyt-scraper-site.herokuapp.com/") {
   $.getJSON("/articles", data => {
     // For each one
     if (data.length > 1) {
@@ -42,7 +42,7 @@ if (window.location.href === "http://localhost:3000/") {
     </div>`);
     }
   });
-} else if (window.location.href === "http://localhost:3000/saved") {
+} else if (window.location.href === "http://localhost:3000/saved" || window.location.href === "https://nyt-scraper-site.herokuapp.com/saved") {
   $.getJSON("/articles", data => {
     // For each one
     if (data.length > 1) {
