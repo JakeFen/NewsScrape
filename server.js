@@ -133,6 +133,7 @@ app.get("/article/:id", function(req, res) {
 });
 
 // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/mongoMongoose", {
+
+mongoose.connect("mongodb://jacobfenwick111@gmail.com:Yourmother1!@ds117681.mlab.com:17681/heroku_xfz8l3b7", {
   useNewUrlParser: true
 });
