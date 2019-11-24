@@ -1,6 +1,8 @@
 var express = require("express");
 var mongoose = require("mongoose");
 
+var PORT = process.env.PORT || 3000;
+
 // Our scraping tools
 var axios = require("axios");
 var cheerio = require("cheerio");
@@ -10,18 +12,12 @@ var db = require("./models");
 
 // Initialize Express
 var app = express();
-var PORT = process.env.PORT || 3000;
 
 // Parse request body as JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // Make public a static folder
 app.use(express.static("public"));
-
-// Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/mongoMongoose", {
-  useNewUrlParser: true
-});
 
 // Start the server
 app.listen(PORT, function() {
@@ -134,4 +130,9 @@ app.get("/article/:id", function(req, res) {
     .catch(function(err) {
       res.json(err);
     });
+});
+
+// Connect to the Mongo DB
+mongoose.connect("mongodb://localhost/mongoMongoose", {
+  useNewUrlParser: true
 });
