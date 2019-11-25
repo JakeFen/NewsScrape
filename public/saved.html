@@ -40,13 +40,15 @@
 
       <section class="note">
         <div class="note-header">
-            <h4 class="note-title">Some text</h4>
+            <h4 class="note-title"></h4>
             <button type="button" class="close-button close" data-dismiss="modal" aria-hidden="true" style="margin-top: -10px;">×</button>
         </div>
         <div class="note-content">
-            <div class="all-notes"></div>
-            <textarea class="note-textarea"></textarea>
-            <button type="button" class="close-button" data-dismiss="modal" aria-hidden="true" style="margin-top: -10px;">SAVE NOTE</button>
+            <div class="all-notes-container">
+              <ul class="all-notes"></ul>
+            </div>
+            <textarea id="note-textarea" class="note-textarea"></textarea>
+            <button type="button" class="submit-button" data-dismiss="modal" aria-hidden="true" style="margin-top: -10px;">SAVE NOTE</button>
         </div>
       </section>
     </main>

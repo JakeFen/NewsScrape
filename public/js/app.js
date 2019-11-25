@@ -1,4 +1,7 @@
-if (window.location.href === "http://localhost:3000/" || window.location.href === "https://nyt-scraper-site.herokuapp.com/") {
+if (
+  window.location.href === "http://localhost:3000/" ||
+  window.location.href === "https://nyt-scraper-site.herokuapp.com/"
+) {
   $.getJSON("/articles", data => {
     // For each one
     if (data.length > 1) {
@@ -42,7 +45,10 @@ if (window.location.href === "http://localhost:3000/" || window.location.href ==
     </div>`);
     }
   });
-} else if (window.location.href === "http://localhost:3000/saved" || window.location.href === "https://nyt-scraper-site.herokuapp.com/saved") {
+} else if (
+  window.location.href === "http://localhost:3000/saved" ||
+  window.location.href === "https://nyt-scraper-site.herokuapp.com/saved"
+) {
   $.getJSON("/articles", data => {
     // For each one
     if (data.length > 1) {
@@ -113,19 +119,76 @@ $(document).on("click", "a.save-article", function() {
 });
 
 $(document).on("click", "a.delete-article", function() {
-    event.preventDefault();
-    var id = $(this).attr("data_id");
-    // $.post("/api/article/" + id, data => {
-    //     location.reload();
-    // })
-    $.ajax("/api/delete/" + id, {
-        type: "DELETE"
-    }).then(() => {
-        location.reload();
-    })
-})
+  event.preventDefault();
+  var id = $(this).attr("data_id");
+  // $.post("/api/article/" + id, data => {
+  //     location.reload();
+  // })
+  $.ajax("/api/delete/" + id, {
+    type: "DELETE"
+  }).then(() => {
+    location.reload();
+  });
+});
 
-$(".close-button").on("click", () => {
-    console.log("you clicked me")
+$(".close-button").on("click", function() {
+  $(".all-notes").empty();
+  $(".note").hide();
+});
+
+const currentId = {
+  articleId: ""
+};
+
+$(document).on("click", "a.add-note", function() {
+  currentId.articleId = $(this).attr("data_id");
+  $("submit-button").addClass("data_id", currentId.articleId);
+  $(".note-title").text(`Notes for Article: ${currentId.articleId}`);
+  $.get("/article/" + currentId.articleId, data => {
+    if (data.note) {
+      console.log(data.note)
+      for (var i = 0; i < 1; i++) {
+        $(".all-notes").append(
+          `<li>${data.note.body}<button class="btn note-delete" data_id="${data.note._id}">X</button></li>`
+        );
+      }
+    } else {
+      $(".all-notes").append(`<li>No notes for this article yet.</li>`);
+    }
+  });
+
+  $(".note").show();
+});
+
+$(document).on("click", "button.note-delete", function() {
+  event.preventDefault();
+  var id = $(this).attr("data_id");
+  // $.post("/api/article/" + id, data => {
+  //     location.reload();
+  // })
+  $.ajax("/api/delete/note" + id, {
+    type: "DELETE"
+  }).then(() => {
     $(".note").hide();
-})
+  });
+});
+
+$(".submit-button").on("click", function() {
+  articleId = currentId.articleId;
+
+  $.ajax({
+    method: "POST",
+    url: "/articles/" + articleId,
+    data: {
+      // Value taken from note textarea
+      body: $("#note-textarea").val()
+    }
+  }).then(function(data) {
+    // Empty the notes section
+    $("#notes").empty();
+  });
+  $(".all-notes").empty();
+  $("#note-textarea").val("");
+
+  $(".note").hide();
+});

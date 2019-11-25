@@ -92,6 +92,12 @@ app.delete("/api/delete/:id", function(req, res) {
   });
 });
 
+app.delete("/api/delete/note/:id", function(req, res) {
+  db.Article.deleteOne({ _id: req.params.id }).then(function(result) {
+    res.json(result);
+  });
+});
+
 // Changed the saved value to true
 app.post("/api/save/:id", function(req, res) {
   db.Article.findOneAndUpdate({ _id: req.params.id }, { saved: true }).then(
@@ -107,7 +113,7 @@ app.post("/articles/:id", function(req, res) {
     .then(function(dbNote) {
       return db.Article.findOneAndUpdate(
         { _id: req.params.id },
-        { note: dbNote.id },
+        { note: dbNote._id },
         { new: true }
       );
     })
@@ -131,6 +137,16 @@ app.get("/article/:id", function(req, res) {
       res.json(err);
     });
 });
+
+app.get("/notes", function(req, res) {
+  db.Note.find({})
+  .then(function(dbArticle) {
+    res.json(dbArticle);
+  })
+  .catch(function(err) {
+    res.json(err);
+  });
+})
 
 // Connect to the Mongo DB
 mongoose.connect("mongodb://localhost/mongoMongoose", {
