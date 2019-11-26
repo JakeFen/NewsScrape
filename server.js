@@ -93,7 +93,8 @@ app.delete("/api/delete/:id", function(req, res) {
 });
 
 app.delete("/api/delete/note/:id", function(req, res) {
-  db.Article.deleteOne({ _id: req.params.id }).then(function(result) {
+  console.log(req.params.id)
+  db.Note.deleteOne({ _id: req.params.id }).then(function(result) {
     res.json(result);
   });
 });
@@ -111,6 +112,7 @@ app.post("/api/save/:id", function(req, res) {
 app.post("/articles/:id", function(req, res) {
   db.Note.create(req.body)
     .then(function(dbNote) {
+      console.log(dbNote._id)
       return db.Article.findOneAndUpdate(
         { _id: req.params.id },
         { note: dbNote._id },
@@ -128,9 +130,11 @@ app.post("/articles/:id", function(req, res) {
 // Route for getting a specific Article and populating it with it's notes
 
 app.get("/article/:id", function(req, res) {
+  console.log(req + "something something")
   db.Article.findOne({ _id: req.params.id })
     .populate("note")
     .then(function(dbArticle) {
+      console.log(dbArticle)
       res.json(dbArticle);
     })
     .catch(function(err) {

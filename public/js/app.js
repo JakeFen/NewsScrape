@@ -50,6 +50,7 @@ if (
   window.location.href === "https://nyt-scraper-site.herokuapp.com/saved"
 ) {
   $.getJSON("/articles", data => {
+    $(".note").hide();
     // For each one
     if (data.length > 1) {
       for (var i = 0; i < data.length; i++) {
@@ -140,37 +141,41 @@ const currentId = {
   articleId: ""
 };
 
-$(document).on("click", "a.add-note", function() {
-  currentId.articleId = $(this).attr("data_id");
-  $("submit-button").addClass("data_id", currentId.articleId);
-  $(".note-title").text(`Notes for Article: ${currentId.articleId}`);
+const searchForNotes = () => {
   $.get("/article/" + currentId.articleId, data => {
-    if (data) {
-      console.log(data)
-      for (var i = 0; i < 1; i++) {
+    if (data.note.length) {
+      console.log(data.note.length)
+      for (var i = 0; i < data.note.length; i++) {
         $(".all-notes").append(
-          `<li>${data.note.body}<button class="btn note-delete" data_id="${data.note._id}">X</button></li>`
+          `<li class="single-note">${data.note[i].body}<button class="btn note-delete primary-text" data_id="${data.note[i]._id}">X</button></li>`
         );
       }
     } else {
-      $(".all-notes").append(`<li>No notes for this article yet.</li>`);
+      $(".all-notes").append(`<li class="single-note">No notes for this article yet.</li>`);
     }
   });
+}
 
+
+$(document).on("click", "a.add-note", function() {
+  currentId.articleId = $(this).attr("data_id");
+  console.log(currentId.articleId)
+  $(".submit-button").attr("data_id", currentId.articleId);
+  $(".note-title").text(`Notes for Article: ${currentId.articleId}`);
+  searchForNotes(currentId.articleId)
   $(".note").show();
 });
 
 $(document).on("click", "button.note-delete", function() {
   event.preventDefault();
   var id = $(this).attr("data_id");
-  // $.post("/api/article/" + id, data => {
-  //     location.reload();
-  // })
-  $.ajax("/api/delete/note" + id, {
+  $.ajax("/api/delete/note/" + id, {
     type: "DELETE"
   }).then(() => {
-    $(".note").hide();
+    $(".all-notes").empty();
+    searchForNotes()
   });
+  // $(".all-notes").empty();
 });
 
 $(".submit-button").on("click", function() {
