@@ -145,8 +145,8 @@ $(document).on("click", "a.add-note", function() {
   $("submit-button").addClass("data_id", currentId.articleId);
   $(".note-title").text(`Notes for Article: ${currentId.articleId}`);
   $.get("/article/" + currentId.articleId, data => {
-    if (data.note) {
-      console.log(data.note)
+    if (data) {
+      console.log(data)
       for (var i = 0; i < 1; i++) {
         $(".all-notes").append(
           `<li>${data.note.body}<button class="btn note-delete" data_id="${data.note._id}">X</button></li>`
